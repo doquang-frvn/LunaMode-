@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LunaMode — Smarter Dark Mode for Every Website</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --night:     #0a0a14;
+  --deep:      #0f0f1e;
+  --card:      #1a1630;
+  --card2:     #221e3a;
+  --lavender:  #c8b8ff;
+  --lav-dim:   #7b6cb0;
+  --lav-glow:  rgba(200,184,255,0.15);
+  --sunset:    #ff9d6c;
+  --text:      #e8e0ff;
+  --text-dim:  #7a7099;
+  --border:    rgba(200,184,255,0.1);
+  --radius:    16px;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--night);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ── AMBIENT ── */
+.ambient {
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  overflow: hidden;
+}
+.orb {
+  position: absolute; border-radius: 50%;
+  filter: blur(100px); opacity: 0.07;
+}
+.orb-1 { width: 700px; height: 700px; background: var(--lavender); top: -250px; right: -150px; }
+.orb-2 { width: 400px; height: 400px; background: var(--sunset); bottom: 10%; left: -100px; }
+.orb-3 { width: 300px; height: 300px; background: var(--lavender); top: 60%; right: 10%; }
+
+/* ── NAV ── */
+nav {
+  position: sticky; top: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 56px;
+  background: rgba(10,10,20,0.8);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+}
+.logo {
+  display: flex; align-items: center; gap: 10px;
+  font-family: 'Syne', sans-serif; font-weight: 800;
+  font-size: 1.15rem; color: var(--lavender);
+  text-decoration: none; letter-spacing: -0.01em;
+}
+.logo-icon {
+  width: 30px; height: 30px;
+  background: linear-gradient(135deg, var(--lavender), var(--sunset));
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+}
+.nav-right { display: flex; align-items: center; gap: 32px; }
+.nav-links { display: flex; gap: 28px; }
+.nav-links a {
+  color: var(--text-dim); text-decoration: none;
+  font-size: 0.88rem; font-weight: 500;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--lavender); }
+.nav-cta {
+  padding: 10px 22px;
+  background: var(--lavender); color: #0a0a14;
+  font-family: 'Syne', sans-serif; font-weight: 700;
+  font-size: 0.85rem; border-radius: 100px;
+  text-decoration: none;
+  transition: opacity 0.2s, transform 0.2s;
+}
+.nav-cta:hover { opacity: 0.85; transform: translateY(-1px); }
+
+/* ── HERO ── */
+.hero {
+  position: relative; z-index: 1;
+  max-width: 1200px; margin: 0 auto;
+  padding: 90px 56px 70px;
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 64px; align-items: center;
+}
+.hero-eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(200,184,255,0.08);
+  border: 1px solid rgba(200,184,255,0.2);
+  border-radius: 100px;
+  padding: 6px 14px;
+  font-size: 0.78rem; color: var(--lavender);
+  font-weight: 500; letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 24px;
+}
+.pulse { width: 7px; height: 7px; border-radius: 50%; background: var(--lavender); animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.8)} }
+
+.hero h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(2.6rem, 4.5vw, 4rem);
+  font-weight: 800; line-height: 1.07;
+  letter-spacing: -0.04em;
+  margin-bottom: 22px;
+}
+.hero h1 .grad {
+  background: linear-gradient(135deg, var(--lavender) 0%, var(--sunset) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero-sub {
+  color: var(--text-dim); font-size: 1.05rem;
+  max-width: 440px; margin-bottom: 36px;
+  line-height: 1.75;
+}
+.hero-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 44px; }
+
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 15px 30px;
+  background: linear-gradient(135deg, var(--lavender), #a98fff);
+  color: #0a0a14;
+  font-family: 'Syne', sans-serif; font-weight: 700;
+  font-size: 0.92rem; border-radius: 100px;
+  text-decoration: none; border: none; cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 0 30px rgba(200,184,255,0.25);
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 0 50px rgba(200,184,255,0.4); }
+
+.btn-ghost {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 15px 26px;
+  border: 1px solid var(--border); color: var(--text);
+  font-family: 'Syne', sans-serif; font-weight: 600;
+  font-size: 0.92rem; border-radius: 100px;
+  text-decoration: none;
+  transition: border-color 0.2s, color 0.2s;
+}
+.btn-ghost:hover { border-color: var(--lavender); color: var(--lavender); }
+
+.hero-proof {
+  display: flex; align-items: center; gap: 14px;
+  font-size: 0.82rem; color: var(--text-dim);
+}
+.avatars { display: flex; }
+.avatars span {
+  width: 28px; height: 28px; border-radius: 50%;
+  border: 2px solid var(--night);
+  margin-left: -8px; font-size: 13px;
+  display: flex; align-items: center; justify-content: center;
+}
+.avatars span:first-child { margin-left: 0; }
+.proof-stars { color: #ffd166; font-size: 0.78rem; letter-spacing: 1px; }
+
+/* ── DEMO BROWSER ── */
+.demo-wrap { position: relative; z-index: 1; }
+.demo-browser {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 40px 100px rgba(0,0,0,0.6), 0 0 0 1px rgba(200,184,255,0.05);
+}
+.browser-chrome {
+  background: var(--card2);
+  padding: 13px 16px;
+  display: flex; align-items: center; gap: 10px;
+  border-bottom: 1px solid var(--border);
+}
+.dots { display: flex; gap: 6px; }
+.dot { width: 10px; height: 10px; border-radius: 50%; }
+.dot-r { background: #ff5f57; }
+.dot-y { background: #febc2e; }
+.dot-g { background: #28c840; }
+.browser-url {
+  flex: 1; background: rgba(255,255,255,0.04);
+  border-radius: 6px; padding: 5px 12px;
+  font-size: 0.75rem; color: var(--text-dim);
+}
+.ai-badge {
+  display: flex; align-items: center; gap: 6px;
+  background: rgba(200,184,255,0.1);
+  border: 1px solid rgba(200,184,255,0.2);
+  border-radius: 6px; padding: 5px 10px;
+  font-size: 0.72rem; color: var(--lavender); font-weight: 500;
+}
+.ai-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--lavender); animation: pulse 1.5s infinite; }
+
+/* AI scan animation */
+.demo-page {
+  padding: 24px;
+  position: relative; overflow: hidden;
+  min-height: 220px;
+}
+.scan-line {
+  position: absolute; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--lavender), transparent);
+  opacity: 0;
+  animation: scan 3s ease-in-out infinite 1s;
+}
+@keyframes scan {
+  0%   { top: 0; opacity: 0; }
+  5%   { opacity: 0.7; }
+  95%  { opacity: 0.7; }
+  100% { top: 100%; opacity: 0; }
+}
+
+.page-title {
+  font-family: 'Syne', sans-serif; font-size: 1.05rem; font-weight: 700;
+  margin-bottom: 12px; color: var(--text);
+}
+.page-block {
+  height: 8px; border-radius: 4px; margin-bottom: 8px;
+  background: var(--card2);
+  position: relative; overflow: hidden;
+}
+.page-block::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(200,184,255,0.08) 50%, transparent 100%);
+  animation: shimmer 2s infinite;
+}
+@keyframes shimmer { 0%{transform:translateX(-100%)} 100%{transform:translateX(100%)} }
+.page-block.w80 { width: 80%; }
+.page-block.w60 { width: 60%; }
+.page-block.w90 { width: 90%; }
+
+.page-img {
+  width: 100%; height: 80px; border-radius: 8px;
+  background: var(--card2); margin: 14px 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.5rem;
+}
+
+/* color chips — AI detected */
+.color-chips {
+  display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap;
+}
+.chip {
+  display: flex; align-items: center; gap: 6px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  border-radius: 100px; padding: 4px 10px;
+  font-size: 0.7rem; color: var(--text-dim);
+}
+.chip-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+/* ── STATS STRIP ── */
+.stats-strip {
+  position: relative; z-index: 1;
+  max-width: 1200px; margin: 0 auto;
+  padding: 0 56px 80px;
+}
+.stats-inner {
+  display: grid; grid-template-columns: repeat(4,1fr);
+  border: 1px solid var(--border); border-radius: var(--radius);
+  overflow: hidden; gap: 1px; background: var(--border);
+}
+.stat {
+  background: var(--deep);
+  padding: 28px 24px; text-align: center;
+}
+.stat-n {
+  font-family: 'Syne', sans-serif; font-weight: 800;
+  font-size: 2.2rem; line-height: 1;
+  background: linear-gradient(135deg, var(--lavender), var(--sunset));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text; margin-bottom: 6px;
+}
+.stat-l { font-size: 0.8rem; color: var(--text-dim); }
+
+/* ── COMPARE SECTION ── */
+.section {
+  position: relative; z-index: 1;
+  max-width: 1200px; margin: 0 auto;
+  padding: 0 56px 100px;
+}
+.section-head { text-align: center; margin-bottom: 56px; }
+.eyebrow {
+  font-size: 0.75rem; text-transform: uppercase;
+  letter-spacing: 0.12em; color: var(--lavender);
+  font-weight: 600; margin-bottom: 14px;
+}
+.section-h2 {
+  font-family: 'Syne', sans-serif; font-weight: 800;
+  font-size: clamp(1.8rem, 3vw, 2.6rem);
+  letter-spacing: -0.03em; line-height: 1.15;
+  margin-bottom: 14px;
+}
+.section-sub { color: var(--text-dim); font-size: 0.95rem; max-width: 460px; margin: 0 auto; }
+
+.compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.compare-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 32px;
+  position: relative;
+}
+.compare-card.lunamode {
+  border-color: rgba(200,184,255,0.3);
+  background: linear-gradient(135deg, var(--card) 0%, #1e1a38 100%);
+}
+.compare-card.lunamode::before {
+  content: 'LunaMode';
+  position: absolute; top: -1px; left: 32px;
+  background: linear-gradient(135deg, var(--lavender), #a98fff);
+  color: #0a0a14;
+  font-family: 'Syne', sans-serif; font-weight: 700;
+  font-size: 0.72rem; letter-spacing: 0.05em;
+  padding: 4px 12px; border-radius: 0 0 8px 8px;
+}
+.compare-title {
+  font-family: 'Syne', sans-serif; font-weight: 700;
+  font-size: 1.1rem; margin-bottom: 20px; padding-top: 12px;
+}
+.compare-card.other .compare-title { color: var(--text-dim); }
+.compare-list { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+.compare-list li { display: flex; align-items: flex-start; gap: 10px; font-size: 0.88rem; line-height: 1.5; }
+.check { color: var(--lavender); font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
+.cross { color: #ff5c5c; font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
+.dim { color: var(--text-dim); }
+
+/* ── FEATURES ── */
+.features-grid {
+  display: grid; grid-template-columns: repeat(3,1fr); gap: 20px;
+}
+.feat {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 28px;
+  transition: border-color 0.2s, transform 0.2s;
+}
+.feat:hover { border-color: rgba(200,184,255,0.25); transform: translateY(-3px); }
+.feat-icon {
+  width: 42px; height: 42px; border-radius: 10px;
+  background: rgba(200,184,255,0.08);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.2rem; margin-bottom: 16px;
+}
+.feat h3 {
+  font-family: 'Syne', sans-serif; font-weight: 700;
+  font-size: 0.98rem; margin-bottom: 8px;
+}
+.feat p { font-size: 0.85rem; color: var(--text-dim); line-height: 1.65; }
+
+/* ── PRICING ── */
+.pricing-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
+  max-width: 760px; margin: 0 auto;
+}
+.plan {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 20px; padding: 36px 32px;
+}
+.plan.pro {
+  background: linear-gradient(160deg, #1e1a38 0%, #251f44 100%);
+  border-color: rgba(200,184,255,0.3);
+  position: relative; overflow: hidden;
+}
+.plan.pro::after {
+  content: '';
+  position: absolute; top: -60px; right: -60px;
+  width: 180px; height: 180px; border-radius: 50%;
+  background: radial-gradient(var(--lavender), transparent 70%);
+  opacity: 0.1; pointer-events: none;
+}
+.plan-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--lavender), #a98fff);
+  color: #0a0a14; font-family: 'Syne', sans-serif;
+  font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em;
+  padding: 4px 12px; border-radius: 100px; margin-bottom: 20px;
+}
+.plan-name {
+  font-family: 'Syne', sans-serif; font-weight: 800;
+  font-size: 1.3rem; margin-bottom: 6px;
+}
+.plan-price {
+  font-family: 'Syne', sans-serif; font-weight: 800;
+  font-size: 2.8rem; line-height: 1; margin-bottom: 4px;
+}
+.plan.pro .plan-price {
+  background: linear-gradient(135deg, var(--lavender), var(--sunset));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.plan-period { font-size: 0.82rem; color: var(--text-dim); margin-bottom: 28px; }
+.plan-features { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; }
+.plan-features li {
+  display: flex; align-items: flex-start; gap: 9px;
+  font-size: 0.86rem; line-height: 1.5;
+}
+.plan-features li .check { color: var(--lavender); }
+.plan-features li .dim-check { color: var(--text-dim); }
+.plan-btn {
+  display: block; text-align: center;
+  padding: 14px; border-radius: 100px;
+  font-family: 'Syne', sans-serif; font-weight: 700;
+  font-size: 0.9rem; text-decoration: none;
+  transition: transform 0.2s, opacity 0.2s;
+}
+.plan-btn:hover { transform: translateY(-1px); opacity: 0.9; }
+.plan-btn.free-btn {
+  background: transparent;
+  border: 1px solid var(--border); color: var(--text);
+}
+.plan-btn.pro-btn {
+  background: linear-gradient(135deg, var(--lavender), #a98fff);
+  color: #0a0a14;
+  box-shadow: 0 0 30px rgba(200,184,255,0.2);
+}
+
+/* ── TESTIMONIALS ── */
+.testi-grid {
+  display: grid; grid-template-columns: repeat(3,1fr); gap: 20px;
+}
+.testi {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 24px;
+}
+.testi-stars { color: #ffd166; font-size: 0.85rem; margin-bottom: 12px; }
+.testi-text { font-size: 0.88rem; color: var(--text-dim); line-height: 1.65; margin-bottom: 16px; font-style: italic; }
+.testi-author { display: flex; align-items: center; gap: 10px; }
+.testi-avatar { width: 32px; height: 32px; border-radius: 50%; font-size: 14px; display: flex; align-items: center; justify-content: center; background: var(--card2); }
+.testi-name { font-size: 0.82rem; font-weight: 600; }
+.testi-role { font-size: 0.75rem; color: var(--text-dim); }
+
+/* ── CTA ── */
+.cta-section {
+  position: relative; z-index: 1;
+  max-width: 1200px; margin: 0 auto;
+  padding: 0 56px 100px;
+}
+.cta-card {
+  background: linear-gradient(135deg, var(--card) 0%, #1e1a38 50%, #1a1530 100%);
+  border: 1px solid rgba(200,184,255,0.2);
+  border-radius: 24px; padding: 72px 56px;
+  text-align: center; position: relative; overflow: hidden;
+}
+.cta-card::before {
+  content: '🌙';
+  position: absolute; font-size: 200px; opacity: 0.04;
+  top: -40px; right: -20px; pointer-events: none;
+}
+.cta-card h2 {
+  font-family: 'Syne', sans-serif; font-weight: 800;
+  font-size: clamp(2rem, 3.5vw, 3rem);
+  letter-spacing: -0.035em; margin-bottom: 16px;
+}
+.cta-card p { color: var(--text-dim); max-width: 440px; margin: 0 auto 36px; line-height: 1.7; }
+.cta-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+.cta-note { margin-top: 16px; font-size: 0.78rem; color: var(--text-dim); }
+
+/* ── FOOTER ── */
+footer {
+  position: relative; z-index: 1;
+  border-top: 1px solid var(--border);
+  max-width: 1200px; margin: 0 auto;
+  padding: 40px 56px;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 16px;
+}
+.footer-logo { font-family: 'Syne', sans-serif; font-weight: 800; color: var(--lavender); font-size: 0.95rem; }
+.footer-links { display: flex; gap: 24px; }
+.footer-links a { color: var(--text-dim); text-decoration: none; font-size: 0.83rem; transition: color 0.2s; }
+.footer-links a:hover { color: var(--lavender); }
+.footer-copy { font-size: 0.8rem; color: var(--text-dim); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 960px) {
+  nav { padding: 16px 24px; }
+  .nav-links { display: none; }
+  .hero, .stats-strip, .section, .cta-section, footer { padding-left: 24px; padding-right: 24px; }
+  .hero { grid-template-columns: 1fr; padding-top: 48px; gap: 40px; }
+  .stats-inner { grid-template-columns: repeat(2,1fr); }
+  .compare-grid, .features-grid, .pricing-grid, .testi-grid { grid-template-columns: 1fr; }
+  .cta-card { padding: 48px 28px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
+</style>
+</head>
+<body>
+
+<div class="ambient">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="logo">
+    <div class="logo-icon">🌙</div>
+    LunaMode
+  </a>
+  <div class="nav-right">
+    <div class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#compare">Compare</a>
+      <a href="#pricing">Pricing</a>
+    </div>
+    <a href="#pricing" class="nav-cta">Get LunaMode</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div>
+    <div class="hero-eyebrow">
+      <div class="pulse"></div>
+      AI-Powered Dark Mode
+    </div>
+    <h1>Dark mode that<br><span class="grad">actually thinks</span><br>for itself.</h1>
+    <p class="hero-sub">LunaMode uses AI to analyze each page's color palette and generate a dark theme that looks intentional — not inverted. Lighter on your CPU, smoother on your eyes.</p>
+    <div class="hero-actions">
+      <a href="#pricing" class="btn-primary">
+        <span>🌙</span> Add to Chrome — Free
+      </a>
+      <a href="#compare" class="btn-ghost">See how it compares</a>
+    </div>
+    <div class="hero-proof">
+      <div class="avatars">
+        <span>👨</span><span>👩</span><span>🧑</span><span>👨‍💻</span>
+      </div>
+      <div>
+        <div class="proof-stars">★★★★★</div>
+        <span>Loved by 2,400+ early users</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="demo-wrap">
+    <div class="demo-browser">
+      <div class="browser-chrome">
+        <div class="dots">
+          <div class="dot dot-r"></div>
+          <div class="dot dot-y"></div>
+          <div class="dot dot-g"></div>
+        </div>
+        <div class="browser-url">medium.com/article/design-trends-2026</div>
+        <div class="ai-badge"><div class="ai-dot"></div> AI analyzing…</div>
+      </div>
+      <div class="demo-page">
+        <div class="scan-line"></div>
+        <div class="page-title">Design Trends in 2026</div>
+        <div class="page-block w90"></div>
+        <div class="page-block w80"></div>
+        <div class="page-img">🖼️</div>
+        <div class="page-block w60"></div>
+        <div class="page-block w90"></div>
+        <div class="page-block w80"></div>
+        <div class="color-chips">
+          <div class="chip"><div class="chip-dot" style="background:#c8b8ff"></div> bg detected</div>
+          <div class="chip"><div class="chip-dot" style="background:#7b6cb0"></div> accent</div>
+          <div class="chip"><div class="chip-dot" style="background:#ff9d6c"></div> highlight</div>
+          <div class="chip"><div class="chip-dot" style="background:#e8e0ff"></div> text</div>
+        </div>
+      </div>
+      <div style="background:var(--card2);padding:12px 20px;border-top:1px solid var(--border);display:flex;gap:12px;align-items:center">
+        <span style="font-size:0.72rem;color:var(--text-dim)">Theme generated in</span>
+        <span style="font-family:'Syne',sans-serif;font-weight:700;font-size:0.78rem;color:var(--lavender)">48ms</span>
+        <span style="margin-left:auto;font-size:0.72rem;color:var(--lavender)">✓ 0% CPU spike</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-strip" style="position:relative;z-index:1">
+  <div class="stats-inner">
+    <div class="stat"><div class="stat-n">48ms</div><div class="stat-l">Avg. theme generation time</div></div>
+    <div class="stat"><div class="stat-n">~0%</div><div class="stat-l">CPU impact per tab</div></div>
+    <div class="stat"><div class="stat-n">10K+</div><div class="stat-l">Websites auto-supported</div></div>
+    <div class="stat"><div class="stat-n">4.9★</div><div class="stat-l">Chrome Web Store rating</div></div>
+  </div>
+</div>
+
+<!-- COMPARE -->
+<section class="section" id="compare">
+  <div class="section-head">
+    <div class="eyebrow">Why LunaMode</div>
+    <h2 class="section-h2">Built to fix what<br>Dark Reader got wrong</h2>
+    <p class="section-sub">Dark Reader is great — but after 10 years, it's showing its age. LunaMode is built from scratch for 2025 browsers.</p>
+  </div>
+  <div class="compare-grid">
+    <div class="compare-card lunamode">
+      <div class="compare-title">🌙 LunaMode</div>
+      <ul class="compare-list">
+        <li><span class="check">✓</span> AI-analyzed color palette per page — looks designed, not inverted</li>
+        <li><span class="check">✓</span> Near-zero CPU usage — uses CSS variables, not JS-heavy filters</li>
+        <li><span class="check">✓</span> Modern popup UI with per-site presets and instant preview</li>
+        <li><span class="check">✓</span> Schedule by time or sunrise/sunset automatically</li>
+        <li><span class="check">✓</span> One-click sync across all your devices</li>
+        <li><span class="check">✓</span> Actively maintained — ships updates every 2 weeks</li>
+      </ul>
+    </div>
+    <div class="compare-card other">
+      <div class="compare-title" style="padding-top:12px">Dark Reader</div>
+      <ul class="compare-list">
+        <li><span class="cross">✗</span> <span class="dim">CSS filter inversion — images and videos look off</span></li>
+        <li><span class="cross">✗</span> <span class="dim">Noticeable CPU and memory spike on heavy pages</span></li>
+        <li><span class="cross">✗</span> <span class="dim">Outdated popup UI, confusing settings for new users</span></li>
+        <li><span class="cross">✗</span> <span class="dim">Manual schedule setup, no location awareness</span></li>
+        <li><span class="cross">✗</span> <span class="dim">Sync requires manual export/import</span></li>
+        <li><span class="cross">✗</span> <span class="dim">Slower release cycle, backlog of unresolved site bugs</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="section" id="features">
+  <div class="section-head">
+    <div class="eyebrow">Features</div>
+    <h2 class="section-h2">Everything dark mode<br>should have been</h2>
+  </div>
+  <div class="features-grid">
+    <div class="feat">
+      <div class="feat-icon">🧠</div>
+      <h3>AI Color Analysis</h3>
+      <p>LunaMode reads the page's actual color intent — brand colors, backgrounds, accents — and remaps them to a dark palette that looks hand-crafted.</p>
+    </div>
+    <div class="feat">
+      <div class="feat-icon">⚡</div>
+      <h3>Zero-lag Performance</h3>
+      <p>Injects a single stylesheet per domain. No JS running per-frame, no filter layers on every element. Pages load and scroll at full speed.</p>
+    </div>
+    <div class="feat">
+      <div class="feat-icon">🎨</div>
+      <h3>Per-site Theming</h3>
+      <p>Save different brightness, contrast, and warmth settings per domain. Your news site, your code editor, and your email can each feel exactly right.</p>
+    </div>
+    <div class="feat">
+      <div class="feat-icon">🌅</div>
+      <h3>Sunrise / Sunset Schedule</h3>
+      <p>Enable dark mode automatically based on your location's actual sunrise and sunset times — no manual clock to set and forget.</p>
+    </div>
+    <div class="feat">
+      <div class="feat-icon">🔄</div>
+      <h3>Cloud Sync</h3>
+      <p>All your site preferences and settings live in the cloud. Open a new browser or a new machine and everything is exactly where you left it.</p>
+    </div>
+    <div class="feat">
+      <div class="feat-icon">🛡️</div>
+      <h3>Zero Data Collection</h3>
+      <p>LunaMode never sees what sites you visit. Color analysis runs entirely on-device. Your browsing is yours alone.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="section" id="pricing">
+  <div class="section-head">
+    <div class="eyebrow">Pricing</div>
+    <h2 class="section-h2">Start free.<br>Go Pro when you're ready.</h2>
+    <p class="section-sub">No credit card for the free plan. Upgrade anytime for the full AI experience.</p>
+  </div>
+  <div class="pricing-grid">
+    <div class="plan">
+      <div class="plan-name">Free</div>
+      <div class="plan-price">$0</div>
+      <div class="plan-period">forever</div>
+      <ul class="plan-features">
+        <li><span class="check">✓</span> Smart dark mode on all sites</li>
+        <li><span class="check">✓</span> Basic brightness & contrast controls</li>
+        <li><span class="check">✓</span> Manual on/off per site</li>
+        <li><span class="dim-check" style="color:var(--text-dim)">—</span> <span style="color:var(--text-dim)">AI color analysis (Pro)</span></li>
+        <li><span class="dim-check" style="color:var(--text-dim)">—</span> <span style="color:var(--text-dim)">Per-site presets (Pro)</span></li>
+        <li><span class="dim-check" style="color:var(--text-dim)">—</span> <span style="color:var(--text-dim)">Cloud sync (Pro)</span></li>
+      </ul>
+      <a href="#" class="plan-btn free-btn">Get Started Free</a>
+    </div>
+    <div class="plan pro">
+      <div class="plan-badge">MOST POPULAR</div>
+      <div class="plan-name">Pro</div>
+      <div class="plan-price">$4.99</div>
+      <div class="plan-period">per month · cancel anytime</div>
+      <ul class="plan-features">
+        <li><span class="check">✓</span> Everything in Free</li>
+        <li><span class="check">✓</span> AI color analysis on every page</li>
+        <li><span class="check">✓</span> Per-site theme presets</li>
+        <li><span class="check">✓</span> Sunrise / sunset auto-schedule</li>
+        <li><span class="check">✓</span> Cloud sync across devices</li>
+        <li><span class="check">✓</span> Priority support</li>
+      </ul>
+      <a href="#" class="plan-btn pro-btn">Start 7-day Free Trial</a>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="section">
+  <div class="section-head">
+    <div class="eyebrow">Early Users</div>
+    <h2 class="section-h2">What people are saying</h2>
+  </div>
+  <div class="testi-grid">
+    <div class="testi">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-text">"Finally a dark mode that doesn't make my design portfolio look like a crime scene. The AI color mapping is genuinely impressive."</p>
+      <div class="testi-author">
+        <div class="testi-avatar">👩‍🎨</div>
+        <div><div class="testi-name">Sarah K.</div><div class="testi-role">UI Designer, Berlin</div></div>
+      </div>
+    </div>
+    <div class="testi">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-text">"Dark Reader was slowing down my browser on complex React apps. Switched to LunaMode and the difference in CPU usage is night and day."</p>
+      <div class="testi-author">
+        <div class="testi-avatar">👨‍💻</div>
+        <div><div class="testi-name">Marcus T.</div><div class="testi-role">Frontend Engineer, Amsterdam</div></div>
+      </div>
+    </div>
+    <div class="testi">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-text">"The per-site presets saved my sanity. My Notion is warm and cozy, my terminal docs are cool and sharp. Set it once, never think about it again."</p>
+      <div class="testi-author">
+        <div class="testi-avatar">🧑‍💼</div>
+        <div><div class="testi-name">Alex R.</div><div class="testi-role">Product Manager, Singapore</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="cta-card">
+    <h2>Your eyes deserve<br><span class="grad">better dark mode.</span></h2>
+    <p>Join thousands of users who've switched to the smarter, faster, prettier way to browse at night.</p>
+    <div class="cta-actions">
+      <a href="#" class="btn-primary"><span>🌙</span> Add to Chrome — Free</a>
+      <a href="#pricing" class="btn-ghost">View Pro plans</a>
+    </div>
+    <div class="cta-note">Free forever · No credit card · Cancel Pro anytime</div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">🌙 LunaMode</div>
+  <div class="footer-links">
+    <a href="#">Privacy</a>
+    <a href="#">Terms</a>
+    <a href="#">Support</a>
+    <a href="#">GitHub</a>
+  </div>
+  <div class="footer-copy">© 2026 LunaMode. All rights reserved.</div>
+</footer>
+
+</body>
+</html>
