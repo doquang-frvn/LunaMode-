@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Welcome to LunaMode Pro 🌙</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --night: #0a0a14; --card: #1a1630;
+  --lavender: #c8b8ff; --sunset: #ff9d6c;
+  --text: #e8e0ff; --text-dim: #7a7099;
+  --border: rgba(200,184,255,0.12);
+}
+body {
+  background: var(--night); color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100vh; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 40px 20px; text-align: center;
+}
+
+.glow {
+  position: fixed; border-radius: 50%; filter: blur(120px); pointer-events: none;
+}
+.g1 { width: 500px; height: 500px; background: var(--lavender); opacity: 0.06; top: -150px; left: 50%; transform: translateX(-50%); }
+.g2 { width: 300px; height: 300px; background: var(--sunset); opacity: 0.05; bottom: 10%; right: 10%; }
+
+.card {
+  position: relative; z-index: 1;
+  background: var(--card);
+  border: 1px solid rgba(200,184,255,0.2);
+  border-radius: 24px;
+  padding: 56px 48px;
+  max-width: 480px; width: 100%;
+  box-shadow: 0 40px 80px rgba(0,0,0,0.5);
+}
+
+.check-circle {
+  width: 72px; height: 72px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--lavender), #a98fff);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 32px; margin: 0 auto 24px;
+  animation: pop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+@keyframes pop {
+  from { transform: scale(0); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+
+.badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(200,184,255,0.08);
+  border: 1px solid rgba(200,184,255,0.2);
+  border-radius: 100px; padding: 5px 14px;
+  font-size: 0.75rem; color: var(--lavender);
+  font-weight: 600; letter-spacing: 0.06em;
+  text-transform: uppercase; margin-bottom: 16px;
+}
+
+h1 {
+  font-family: 'Syne', sans-serif; font-weight: 800;
+  font-size: 2rem; letter-spacing: -0.03em;
+  margin-bottom: 12px; line-height: 1.15;
+}
+h1 span {
+  background: linear-gradient(135deg, var(--lavender), var(--sunset));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.sub {
+  color: var(--text-dim); font-size: 0.95rem;
+  line-height: 1.7; margin-bottom: 36px;
+}
+
+.steps {
+  background: rgba(0,0,0,0.2);
+  border: 1px solid var(--border);
+  border-radius: 14px; padding: 24px;
+  margin-bottom: 32px; text-align: left;
+}
+.step {
+  display: flex; align-items: flex-start; gap: 14px;
+  margin-bottom: 16px;
+}
+.step:last-child { margin-bottom: 0; }
+.step-num {
+  width: 26px; height: 26px; border-radius: 50%;
+  background: rgba(200,184,255,0.12);
+  border: 1px solid rgba(200,184,255,0.2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.75rem; font-weight: 700; color: var(--lavender);
+  flex-shrink: 0; margin-top: 1px;
+}
+.step-text { font-size: 0.87rem; color: var(--text-dim); line-height: 1.5; }
+.step-text strong { color: var(--text); font-weight: 500; }
+
+.btn-primary {
+  display: block; width: 100%;
+  padding: 15px;
+  background: linear-gradient(135deg, var(--lavender), #a98fff);
+  color: #0a0a14;
+  font-family: 'Syne', sans-serif; font-weight: 700;
+  font-size: 0.95rem; border-radius: 100px;
+  text-decoration: none; border: none; cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 0 30px rgba(200,184,255,0.2);
+  margin-bottom: 12px;
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 0 50px rgba(200,184,255,0.35); }
+
+.btn-ghost {
+  display: block; width: 100%;
+  padding: 13px;
+  border: 1px solid var(--border); color: var(--text-dim);
+  font-family: 'Syne', sans-serif; font-weight: 600;
+  font-size: 0.88rem; border-radius: 100px;
+  text-decoration: none; text-align: center;
+  transition: border-color 0.2s, color 0.2s;
+}
+.btn-ghost:hover { border-color: var(--lavender); color: var(--lavender); }
+
+.support-note {
+  margin-top: 24px;
+  font-size: 0.78rem; color: var(--text-dim);
+}
+.support-note a { color: var(--lavender); text-decoration: none; }
+.support-note a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+
+<div class="glow g1"></div>
+<div class="glow g2"></div>
+
+<div class="card">
+  <div class="check-circle">✓</div>
+
+  <div class="badge">🌙 LunaMode Pro</div>
+
+  <h1>You're all set,<br><span>welcome to Pro!</span></h1>
+
+  <p class="sub">Payment confirmed. Your Pro subscription is now active. Here's how to get started:</p>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-text">
+        <strong>Check your email</strong> — your license key and receipt have been sent by Polar.
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-text">
+        <strong>Install LunaMode</strong> from the Chrome Web Store if you haven't already.
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-text">
+        <strong>Activate Pro</strong> — open the extension popup, go to Settings, and enter your license key.
+      </div>
+    </div>
+  </div>
+
+  <a href="https://chromewebstore.google.com" target="_blank" class="btn-primary">
+    🌙 Open Chrome Web Store
+  </a>
+  <a href="/" class="btn-ghost">← Back to LunaMode</a>
+
+  <div class="support-note">
+    Questions? Email us at <a href="mailto:support@clingogo.com">support@clingogo.com</a>
+  </div>
+</div>
+
+</body>
+</html>
